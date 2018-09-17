@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/rseibane/AndroidDeepLink.svg)](https://jitpack.io/#rseibane/AndroidDeepLink)
+
 # AndroidDeepLink
 A lightweight Android library to handle deep links.
 
