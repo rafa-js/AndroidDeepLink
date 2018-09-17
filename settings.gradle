@@ -1,1 +1,2 @@
 include ':app', ':deeplink'
+rootProject.name = 'artifact'
