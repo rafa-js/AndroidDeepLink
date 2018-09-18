@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group = 'com.freaklabs'
+group = 'com.github.rseibane'
 version = '0.1.0'
 
 android {
