@@ -39,7 +39,7 @@ public class DeepLinkHandler {
         try {
             DeepLink deepLink = deepLinkParser.getDeepLinkFromUrl( url );
             IDeepLinkLauncher deepLinkLauncher = deepLinkLauncherFactory.getDeepLinkLauncher( deepLink );
-            if ( deepLinkLauncher != null ) {
+            if ( deepLink != DeepLink.EMPTY && deepLinkLauncher != null ) {
                 deepLinkLauncher.launchDeepLink( deepLink );
                 deepLinkListener.onProcessDeepLink( deepLink );
             }
