@@ -52,29 +52,33 @@ public class DefaultDeepLinkParser implements IDeepLinkParser {
     }
 
     private String parseAction(String path) {
-        int index = path.indexOf( "?" );
+        int index = path.indexOf( StringUtils.QUESTION_MARK );
         if ( index != -1 ) {
             return path.substring( 0, index );
         }
         return path;
     }
 
-    private String[] parseArguments(String url) {
-        String[] arguments = url.split( StringUtils.SLASH );
-        String lastArgument = arguments[arguments.length - 1];
-        if ( hasQueryParameters( lastArgument ) ) {
-            arguments[arguments.length - 1] = lastArgument.split( "\\?" )[0];
+    private String[] parseArguments(String path) {
+        while ( path.contains( "//" ) ) {
+            path = path.replace( "//", "/" );
         }
-        return Arrays.copyOfRange( arguments, 1, arguments.length );
+        if ( path.startsWith( "/" ) ) {
+            path = path.substring( 1 );
+        }
+        if ( hasQueryParameters( path ) ) {
+            path = path.split( "\\?" )[0];
+        }
+        return path.split( StringUtils.SLASH );
     }
 
-    private Map<String, String> parseQueryParameters(String url) {
+    private Map<String, String> parseQueryParameters(String path) {
         Map<String, String> parameters = new HashMap<>();
         try {
-            String[] components = url.split( StringUtils.SLASH );
-            String lastComponent = components[components.length - 1];
-            if ( hasQueryParameters( lastComponent ) ) {
-                parameters = extractQueryParameters( lastComponent.split( "\\?" )[1] );
+            if ( hasQueryParameters( path ) ) {
+                String[] components = path.split( "\\?" );
+                String lastComponent = components[1];
+                parameters = extractQueryParameters( lastComponent );
             }
         } catch ( Exception ex ) {
             ex.printStackTrace();
