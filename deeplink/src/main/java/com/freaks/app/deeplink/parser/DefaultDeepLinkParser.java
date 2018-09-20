@@ -39,7 +39,7 @@ public class DefaultDeepLinkParser implements IDeepLinkParser {
             deepLink.setAction( parseAction( path ) );
             deepLink.setDeepLinkReferral( parseReferral( url ) );
             deepLink.setPathComponents( parseArguments( path ) );
-            deepLink.setQueryParameters( URIUtils.parseQueryParameters( path ) );
+            deepLink.setQueryParameters( URIUtils.extractQueryParameters( path ) );
             return deepLink;
         } catch ( Exception e ) {
             e.printStackTrace();
@@ -69,7 +69,7 @@ public class DefaultDeepLinkParser implements IDeepLinkParser {
     }
 
     private DeepLinkReferral parseReferral(String url) {
-        Map<String, String> parameters = URIUtils.parseQueryParameters( url );
+        Map<String, String> parameters = URIUtils.extractQueryParameters( url );
         if ( parameters.containsKey( REFERRAL_PARAMETER_NAME ) ) {
             try {
                 int code = Integer.parseInt( parameters.get( REFERRAL_PARAMETER_NAME ) );

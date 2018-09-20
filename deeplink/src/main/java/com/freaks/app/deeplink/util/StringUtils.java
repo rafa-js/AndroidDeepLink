@@ -1,5 +1,6 @@
 package com.freaks.app.deeplink.util;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -107,4 +108,14 @@ public class StringUtils {
         return query.substring( 0, query.length() - 1 );
     }
 
+    public static final String join(String separator, List<String> items) {
+        StringBuilder builder = new StringBuilder();
+        for ( int i = 0; i < items.size(); i++ ) {
+            if ( i != 0 ) {
+                builder.append( separator );
+            }
+            builder.append( items.get( i ) );
+        }
+        return builder.toString();
+    }
 }
