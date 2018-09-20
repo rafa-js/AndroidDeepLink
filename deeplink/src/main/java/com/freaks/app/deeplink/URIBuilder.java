@@ -1,10 +1,11 @@
 package com.freaks.app.deeplink;
 
+import android.net.Uri;
+
 import com.freaks.app.deeplink.util.StringUtils;
 import com.freaks.app.deeplink.util.URIUtils;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,8 +85,8 @@ public class URIBuilder {
         return schema + "://" + host + path + URIUtils.encodeQueryParameters( queryParameters );
     }
 
-    public URI build() {
-        return URI.create( buildAsString() );
+    public Uri build() {
+        return Uri.parse( buildAsString() );
     }
 
 
