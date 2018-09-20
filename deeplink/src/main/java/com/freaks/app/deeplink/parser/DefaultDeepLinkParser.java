@@ -4,13 +4,9 @@ import com.freaks.app.deeplink.DeepLink;
 import com.freaks.app.deeplink.DeepLinkReferral;
 import com.freaks.app.deeplink.IDeepLinkParser;
 import com.freaks.app.deeplink.util.StringUtils;
+import com.freaks.app.deeplink.util.URIUtils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DefaultDeepLinkParser implements IDeepLinkParser {
@@ -43,7 +39,7 @@ public class DefaultDeepLinkParser implements IDeepLinkParser {
             deepLink.setAction( parseAction( path ) );
             deepLink.setDeepLinkReferral( parseReferral( url ) );
             deepLink.setPathComponents( parseArguments( path ) );
-            deepLink.setQueryParameters( parseQueryParameters( path ) );
+            deepLink.setQueryParameters( URIUtils.parseQueryParameters( path ) );
             return deepLink;
         } catch ( Exception e ) {
             e.printStackTrace();
@@ -66,28 +62,14 @@ public class DefaultDeepLinkParser implements IDeepLinkParser {
         if ( path.startsWith( "/" ) ) {
             path = path.substring( 1 );
         }
-        if ( hasQueryParameters( path ) ) {
+        if ( URIUtils.hasQueryParameters( path ) ) {
             path = path.split( "\\?" )[0];
         }
         return path.split( StringUtils.SLASH );
     }
 
-    private Map<String, String> parseQueryParameters(String path) {
-        Map<String, String> parameters = new HashMap<>();
-        try {
-            if ( hasQueryParameters( path ) ) {
-                String[] components = path.split( "\\?" );
-                String lastComponent = components[1];
-                parameters = extractQueryParameters( lastComponent );
-            }
-        } catch ( Exception ex ) {
-            ex.printStackTrace();
-        }
-        return parameters;
-    }
-
     private DeepLinkReferral parseReferral(String url) {
-        Map<String, String> parameters = parseQueryParameters( url );
+        Map<String, String> parameters = URIUtils.parseQueryParameters( url );
         if ( parameters.containsKey( REFERRAL_PARAMETER_NAME ) ) {
             try {
                 int code = Integer.parseInt( parameters.get( REFERRAL_PARAMETER_NAME ) );
@@ -98,27 +80,6 @@ public class DefaultDeepLinkParser implements IDeepLinkParser {
             }
         }
         return DeepLinkReferral.UNKNOWN;
-    }
-
-    private boolean hasQueryParameters(String url) {
-        return url.contains( StringUtils.QUESTION_MARK );
-    }
-
-    private Map<String, String> extractQueryParameters(String query) throws MalformedURLException {
-        Map<String, String> parameters = new HashMap<>();
-        List<String> components = Arrays.asList( query.split( StringUtils.AMPERSAND ) );
-        for ( String component : components ) {
-            String[] pair = component.split( "=" );
-            if ( pair.length != 2 ) {
-                throw new MalformedURLException();
-            }
-            try {
-                parameters.put( pair[0], URLDecoder.decode( pair[1], "UTF-8" ) );
-            } catch ( UnsupportedEncodingException e ) {
-                e.printStackTrace();
-            }
-        }
-        return parameters;
     }
 
 }
